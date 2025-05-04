@@ -4,43 +4,52 @@ import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import * as THREE from 'three';
-import useSound from 'use-sound';
 
-const restaurantList = ['🍜 라멘', '🍕 피자', '🥩 고기', '🍣 초밥', '🥗 샐러드'];
+import { getRestaurant, Restaurant } from '../apis/getRestaurant';
 
 export function GachaMachine({ onDraw }: { onDraw: (result: string) => void }) {
+  const isFetching = useRef(false); 
+  const restaurantResultRef = useRef<Restaurant | null>(null);
+
   const { scene } = useGLTF('/gacha.glb');
   const ref = useRef<THREE.Group>(null!);
   const [shaking, setShaking] = useState(false);
   const [shakeTime, setShakeTime] = useState(0);
-  const [play] = useSound('/pop.mp3', { volume: 0.7 });
-
+  
   useFrame((_, delta) => {
     if (shaking) {
       setShakeTime((prev) => prev + delta);
-
+  
       const t = shakeTime;
       ref.current.rotation.x = Math.sin(t * 20) * 0.05;
       ref.current.rotation.z = Math.sin(t * 30) * 0.05;
-
+  
       if (shakeTime > 2) {
         setShaking(false);
         setShakeTime(0);
-
-        const result = restaurantList[Math.floor(Math.random() * restaurantList.length)];
-        play();
-        onDraw(result);
+        isFetching.current = false;
+  
+        const result = restaurantResultRef.current;   // 여기서 보여줄 결과 반영!
+        onDraw(result?.name ?? '아무거나');
       }
     }
   });
+  
+const handleClick = async () => {
+  if (shaking || isFetching.current) return;
+  isFetching.current = true;
 
-  const handleClick = () => {
-    if (!shaking) {
-      setShaking(true);
-      setShakeTime(0);
-    }
-  };
+  setShaking(true);
+  setShakeTime(0);
 
+  try {
+    const data = await getRestaurant();
+    restaurantResultRef.current = data; // 결과를 미리 저장해놓기
+  } catch (error) {
+    console.error(error);
+    restaurantResultRef.current = { name: '아무거나', address: '아무거나', category_name: '아무거나' };
+  }
+};
   return (
     <group ref={ref} onClick={handleClick} scale={1.5} position={[-0.8, -0.5, 0]}>
       <primitive object={scene} />

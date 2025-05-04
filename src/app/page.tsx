@@ -21,8 +21,12 @@ export default function Page() {
   return (
     <div className="container">
       <div className="overlay">
-        <h1 className="title">오늘의 메뉴 추천은?</h1>
-        {result && <p className="result">👉 {result} 👈</p>}
+        <h2 className="title">오늘의 숭실 추천은?</h2>
+      
+        {result ?
+        <>
+          <p className="result">👉 {result} 👈</p>
+        </> : null }
         <p className="hint">(가챠 머신을 클릭해보세요)</p>
       </div>
 

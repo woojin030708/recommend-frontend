@@ -24,7 +24,9 @@ export function ResultParticles({ trigger }: { trigger: boolean }) {
   }, [positions]);
 
   useEffect(() => {
-    if (trigger) setTimeout(() => {}, 1500); // auto-clear if needed
+    if (trigger) {
+      setTimeout(() => {}, 1500);
+    }
   }, [trigger]);
 
   return (
