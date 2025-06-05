@@ -56,14 +56,31 @@ a {
   text-align: center;
   z-index: 10;
   color: white;
-  font-family: 'Arial', sans-serif;
-  pointer-events: none;
+  font-family: "Arial", sans-serif;
+  /* pointer-events: none; */
 }
 
 .title {
   font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: 10px;
+}
+
+.category-list {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.category {
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: gray;
+}
+
+.category.active {
+  color: white;
 }
 
 .result {
