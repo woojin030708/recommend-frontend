@@ -4,8 +4,14 @@ export interface Restaurant {
   category_name: string;
 }
 
-export const getRestaurant = async (): Promise<Restaurant> => {
-    const res = await fetch("http://localhost:8000/recommend?lat=37.4963538&lng=126.9572222");
-    const data = await res.json();
-    return data;
-  };
+export const getRestaurant = async (
+  category_name?: string
+): Promise<Restaurant> => {
+  let url = "http://localhost:8000/recommend?lat=37.4963538&lng=126.9572222";
+  if (category_name) {
+    url += `&category=${category_name}`;
+  }
+  const res = await fetch(url);
+  const data = await res.json();
+  return data;
+};
