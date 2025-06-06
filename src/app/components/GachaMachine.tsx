@@ -11,7 +11,7 @@ export function GachaMachine({
   onDraw,
   selectedCategory,
 }: {
-  onDraw: (result: string) => void;
+  onDraw: (result: any) => void;
   selectedCategory?: string;
 }) {
   const isFetching = useRef(false);
@@ -36,7 +36,12 @@ export function GachaMachine({
         isFetching.current = false;
 
         const result = restaurantResultRef.current; // 여기서 보여줄 결과 반영!
-        onDraw(result?.name ?? "아무거나");
+        onDraw({
+          name: result?.name ?? "아무거나",
+          place: result?.place ?? "http://place.map.kakao.com",
+          x: result?.x ?? 37.4963538,
+          y: result?.y ?? 126.9572222,
+        });
       }
     }
   });
@@ -58,6 +63,9 @@ export function GachaMachine({
         name: "아무거나",
         address: "아무거나",
         category_name: "아무거나",
+        place: "http://place.map.kakao.com",
+        x: 37.4963538,
+        y: 126.9572222,
       };
     }
   };

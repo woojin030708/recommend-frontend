@@ -7,14 +7,24 @@ import { useState } from "react";
 import "./globals.css";
 import { ResultParticles } from "./components/ResultParticles";
 import { GachaMachine } from "./components/GachaMachine";
+import { KakaoMap } from "./map";
 
 export default function Page() {
   const [selectedCategory, setSelectedCategory] = useState<string>("전체");
   const [result, setResult] = useState<string | null>(null);
   const [trigger, setTrigger] = useState(false);
-
+  const [map, setMap] = useState({
+    place: "http://place.map.kakao.com",
+    x: 126.9572222,
+    y: 37.4963538,
+  });
   const handleDraw = (value: string) => {
-    setResult(value);
+    setResult(value?.name);
+    setMap({
+      place: value?.place,
+      x: Number(value?.x),
+      y: Number(value?.y),
+    });
     setTrigger(true);
     setTimeout(() => setTrigger(false), 1500);
   };
@@ -40,12 +50,20 @@ export default function Page() {
 
         {result ? (
           <>
-            <p className="result">👉 {result} 👈</p>
+            <p className="result">
+              👉{" "}
+              <a href={map.place} target="_blank">
+                {result}
+              </a>{" "}
+              👈
+            </p>
           </>
         ) : null}
         <p className="hint">(가챠 머신을 클릭해보세요)</p>
       </div>
-
+      <div className="map">
+        <KakaoMap lat={map.y} lng={map.x} />
+      </div>
       <Canvas shadows camera={{ position: [0, 0, 10], fov: 10 }}>
         <ambientLight intensity={0.7} />
         <pointLight position={[10, 10, 10]} />

@@ -2,6 +2,9 @@ export interface Restaurant {
   name: string;
   address: string;
   category_name: string;
+  place: string;
+  x: number;
+  y: number;
 }
 
 export const getRestaurant = async (
